@@ -23,11 +23,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Amplify Backend dependencies
-        run: npm ci
+      - name: Install dependencies (skip npm ci due to lockfile mismatch)
+        run: npm install
+
+      - name: Install Amplify CLI globally
+        run: npm install -g @aws-amplify/cli
 
       - name: Deploy backend
         env:
           AMPLIFY_ACCESS_TOKEN: ${{ secrets.AMPLIFY_ACCESS_TOKEN }}
-        run: npx amplify backend deploy --yes
-
+        run: amplify backend deploy --yes
