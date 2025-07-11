@@ -1,0 +1,33 @@
+name: Deploy Amplify Backend (Gen 2)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "amplify/**"
+      - "package.json"
+      - ".github/workflows/amplify.yml"
+
+jobs:
+  deploy:
+    name: Deploy Amplify Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Amplify Backend dependencies
+        run: npm ci
+
+      - name: Deploy backend
+        env:
+          AMPLIFY_ACCESS_TOKEN: ${{ secrets.AMPLIFY_ACCESS_TOKEN }}
+        run: npx amplify backend deploy --yes
+
